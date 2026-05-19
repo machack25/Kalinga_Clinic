@@ -1,0 +1,534 @@
+body {
+  margin: 0;
+  font-family: 'Poppins', sans-serif;
+  background: url('logo2.jpg') no-repeat center center fixed;
+  background-size: cover;
+  color: #333;
+  line-height: 1.6;
+  overflow-x: hidden;
+  min-height: 100vh;
+}
+
+body::before {
+  content: '';
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.4);
+  backdrop-filter: blur(10px);
+  z-index: -1;
+}
+
+/* --- Sidebar, Menu, Header Styles (Unchanged) --- */
+.menu-toggle {
+  display: block;
+  position: fixed;
+  top: 15px;
+  left: 15px;
+  z-index: 1100;
+  background: rgba(255, 255, 255, 0.2);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  color: white;
+  width: 45px;
+  height: 45px;
+  border-radius: 50%;
+  font-size: 20px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  backdrop-filter: blur(10px);
+}
+.menu-toggle:hover {
+  background: rgba(255, 255, 255, 0.4);
+}
+.overlay {
+  display: none;
+  position: fixed;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 999;
+}
+.overlay.active {
+  display: block;
+}
+.sidebar {
+  width: 250px;
+  height: 100vh;
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(15px);
+  color: white;
+  position: fixed;
+  left: 0; top: 0;
+  z-index: 1000;
+  padding: 20px;
+  box-sizing: border-box;
+  text-align: center;
+  border-right: 1px solid rgba(255, 255, 255, 0.2);
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
+  transform: translateX(-100%);
+  transition: transform 0.3s ease-in-out;
+}
+.sidebar.open {
+  transform: translateX(0);
+}
+.sidebar .sidebar-logo {
+  width: 100px;
+  border-radius: 50%;
+  margin-bottom: 10px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+}
+.sidebar h3 {
+  margin: 5px 0 20px;
+  font-weight: 600;
+}
+.menu {
+  text-align: left;
+  margin-top: 30px;
+}
+.menu a {
+  display: flex;
+  align-items: center;
+  color: white;
+  text-decoration: none;
+  padding: 15px;
+  margin: 10px 0;
+  border-radius: 8px;
+  transition: all 0.3s ease;
+  font-weight: 500;
+}
+.menu a i {
+  margin-right: 15px;
+  width: 20px;
+  text-align: center;
+}
+.menu a:hover, .menu a.active {
+  background: rgba(255, 255, 255, 0.2);
+  transform: translateX(5px);
+}
+.logout-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(45deg, #e74c3c, #c0392b);
+  color: white;
+  text-decoration: none;
+  padding: 15px 20px;
+  border-radius: 8px;
+  margin-top: 40px;
+  font-size: 16px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+}
+.logout-btn i {
+  margin-right: 10px;
+}
+.logout-btn:hover {
+  background: linear-gradient(45deg, #c0392b, #a93226);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(231, 76, 60, 0.4);
+}
+.main-container {
+  width: 100%;
+  min-height: 100vh;
+  transition: margin-left 0.3s ease-in-out;
+}
+.main-content {
+  padding: 20px;
+  padding-top: 80px;
+  box-sizing: border-box;
+  max-width: 1200px; /* Widened max-width for grid */
+  margin: 0 auto; /* Center content */
+}
+.header {
+  margin-bottom: 30px;
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+  padding: 20px;
+  border-radius: 15px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+.header-title h2 {
+  margin: 0;
+  color: white;
+  font-weight: 600;
+  font-size: 1.5rem;
+}
+.header-title p {
+  margin: 5px 0 0 0;
+  color: rgba(255, 255, 255, 0.8);
+  font-size: 0.9rem;
+}
+/* --- End Unchanged Styles --- */
+
+
+.success-message, .error-message {
+  padding: 15px;
+  margin-bottom: 20px;
+  border-radius: 8px;
+  color: white;
+  font-weight: 500;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+}
+.success-message { background: linear-gradient(45deg, #28a745, #218838); }
+.error-message { background: linear-gradient(45deg, #dc3545, #c82333); }
+
+/* --- UPDATED: Grid layout for cards --- */
+.content-grid {
+  display: grid; /* Use grid */
+  grid-template-columns: 1fr; /* Default to one column */
+  gap: 30px;
+}
+
+.history-section {
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(15px);
+  padding: 30px; /* More padding */
+  border-radius: 15px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  width: 100%; /* Take full width of grid cell */
+  box-sizing: border-box;
+  text-align: center; /* Center button and text */
+}
+.history-section h3 {
+  margin-top: 0;
+  color: #0056b3;
+  font-weight: 600;
+  border-bottom: 2px solid #007bff;
+  padding-bottom: 10px;
+  display: inline-flex; /* Center the heading nicely */
+  align-items: center;
+  gap: 10px;
+}
+.history-section p {
+  font-size: 1rem;
+  color: #495057;
+  margin-bottom: 25px;
+}
+
+/* Button for History */
+.view-history-btn {
+  display: inline-block;
+  background: linear-gradient(45deg, #007bff, #0056b3);
+  color: white;
+  padding: 12px 25px;
+  border-radius: 8px;
+  text-decoration: none;
+  font-size: 1rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  border: none;
+  box-shadow: 0 4px 15px rgba(0, 123, 255, 0.2);
+}
+.view-history-btn:hover {
+  background: linear-gradient(45deg, #0056b3, #004085);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(0, 123, 255, 0.3);
+}
+.view-history-btn i {
+  margin-right: 8px;
+}
+
+
+.empty-state {
+  text-align: center;
+  padding: 40px 20px;
+  color: #6c757d;
+}
+.empty-state i {
+  font-size: 3rem;
+  margin-bottom: 15px;
+  opacity: 0.5;
+}
+
+/* --- MODAL STYLES --- */
+.modal {
+  display: none;
+  position: fixed;
+  z-index: 1200;
+  left: 0; top: 0;
+  width: 100%; height: 100%;
+  overflow: auto; /* Enable scroll if needed */
+  background-color: rgba(0, 0, 0, 0.6);
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+  box-sizing: border-box;
+}
+.modal-overlay {
+  position: fixed;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  cursor: pointer;
+}
+
+/* --- UPDATED: Modal Content --- */
+.modal-content {
+  background: #ffffff; /* UPDATED: Was #f8f9fa */
+  border-radius: 15px;
+  width: 90%;
+  max-width: 650px; /* Wider modal */
+  box-sizing: border-box;
+  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.3);
+  position: relative; /* For overlay */
+  z-index: 1201;
+  overflow: hidden; /* Keep rounded corners */
+}
+
+/* --- UPDATED: Modal Header --- */
+.modal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 20px;
+  border-bottom: 1px solid #dee2e6;
+  background-color: #f8f9fa; /* UPDATED: Was #ffffff */
+}
+.modal-header h2 {
+  margin: 0;
+  color: #007bff;
+  font-size: 1.25rem;
+  display: flex; align-items: center; gap: 10px;
+}
+.close {
+  font-size: 28px;
+  font-weight: bold;
+  cursor: pointer;
+  color: #444;
+  transition: color 0.3s ease;
+  padding: 0 5px;
+}
+.close:hover {
+  color: #e74c3c;
+}
+.modal-body {
+  padding: 20px;
+  max-height: 60vh;
+  overflow-y: auto;
+}
+
+/* History List Item ("File") Styles */
+.history-list-item {
+  display: flex;
+  align-items: center;
+  padding: 15px;
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 10px;
+  margin-bottom: 10px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  text-decoration: none;
+  color: inherit;
+}
+.history-list-item:hover {
+  transform: translateX(5px);
+  border-color: #007bff;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+}
+.item-icon {
+  width: 40px; height: 40px;
+  background-color: #e6f2ff; /* Lighter blue */
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  color: #007bff;
+  margin-right: 15px;
+  font-size: 18px;
+  flex-shrink: 0;
+}
+.item-info {
+  flex: 1;
+  overflow: hidden;
+}
+.item-title {
+  display: block;
+  font-weight: 600;
+  color: #1e293b;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.item-subtitle {
+  display: block;
+  font-size: 14px;
+  color: #64748b;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.item-arrow {
+  color: #cbd5e1;
+  margin-left: 10px;
+}
+.empty-state.modal-empty {
+  padding: 20px;
+}
+
+/* History Detail ("Document") Styles */
+.modal-header.detail-header {
+  background-color: #f8f9fa; /* Match body */
+}
+.modal-header.detail-header h2 {
+  color: #343a40; /* Darker title */
+  font-size: 1.15rem;
+  flex: 1;
+  text-align: center;
+}
+.back-btn {
+  background: #e9ecef;
+  border: 1px solid #dee2e6;
+  color: #495057;
+  padding: 8px 12px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  transition: background-color 0.2s ease;
+}
+.back-btn:hover {
+  background-color: #dee2e6;
+}
+.modal-body.detail-body {
+  background-color: #ffffff; /* White "paper" */
+}
+
+.detail-body hr {
+  border: 0;
+  height: 1px;
+  background: #e9ecef;
+  margin: 20px 0;
+}
+.detail-group { margin-bottom: 18px; }
+.detail-group span {
+  font-weight: 600;
+  color: #343a40;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.9rem;
+  text-transform: uppercase;
+  color: #6c757d;
+  margin-bottom: 5px;
+}
+.detail-group span i {
+  color: #007bff;
+}
+.detail-group p {
+  margin: 0;
+  color: #212529; /* Darker text */
+  font-size: 1rem;
+  white-space: pre-wrap; /* Respect newlines */
+  padding: 10px;
+  background: #f8f9fa; /* Light bg */
+  border-radius: 6px;
+  border: 1px solid #e9ecef;
+}
+
+/* --- NEW: Form Styles (from account.css) --- */
+.form-group {
+  margin-bottom: 20px;
+}
+.form-group label {
+  display: block;
+  font-weight: 600;
+  margin-bottom: 8px;
+  color: #343a40;
+}
+.form-group input, .form-group textarea {
+  width: 100%;
+  padding: 12px;
+  border-radius: 8px;
+  border: 1px solid #ced4da;
+  font-size: 1rem;
+  box-sizing: border-box;
+  background: #f8f9fa;
+  transition: all 0.3s ease;
+  font-family: 'Poppins', sans-serif;
+}
+.form-group input:not([readonly]):focus, .form-group textarea:focus {
+  outline: none;
+  border-color: #007bff;
+  box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.25);
+  background-color: #fff;
+}
+.form-group textarea {
+  resize: vertical;
+  min-height: 120px;
+}
+.form-btn {
+  width: 100%;
+  padding: 15px;
+  background: linear-gradient(45deg, #007bff, #0056b3);
+  border: none;
+  border-radius: 8px;
+  color: white;
+  font-size: 1.1rem;
+  cursor: pointer;
+  font-weight: 600;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 15px rgba(0, 123, 255, 0.2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+.form-btn:hover {
+  background: linear-gradient(45deg, #0056b3, #004085);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(0, 123, 255, 0.4);
+}
+
+/* --- NEW: NOTIFICATION (from account.css) --- */
+.notification {
+  position: fixed;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  padding: 15px 25px;
+  border-radius: 8px;
+  color: white;
+  font-weight: 500;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+  z-index: 1300;
+  opacity: 0;
+  visibility: hidden;
+  transition: all 0.3s ease;
+}
+.notification.show {
+  bottom: 40px;
+  opacity: 1;
+  visibility: visible;
+}
+.notification.success {
+  background: linear-gradient(45deg, #28a745, #218838);
+}
+.notification.error {
+  background: linear-gradient(45deg, #dc3545, #c82333);
+}
+
+
+@media (min-width: 769px) {
+  .menu-toggle { display: none; }
+  .sidebar { transform: translateX(0); }
+  
+  /* --- THIS IS THE FIX --- */
+  .main-container { 
+    margin-left: 250px; 
+    width: calc(100% - 250px); /* This line fixes the centering */
+  }
+  /* ----------------------- */
+  
+  .main-content { padding-top: 20px; }
+  
+  
+  .content-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+}
